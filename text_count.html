@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<title>スマホで文字数カウントするやつ</title>
+</head>
+<body>
+
+<input id="selectbox" class="30" type="text" value="hage" name="message" onclick="this.select();" onblur="clearInterval(timer);" onfocus="check(30);" style="width:300px;" /><br />
+残り文字数：<span id="rest_text">30</span>
+
+<script>
+
+//文字数カウント関数
+function check(max_length){
+	jQuery(function($){
+		timer = setInterval(function(){
+			var str = $("#selectbox").val();
+			r = 0;
+			for (var i = 0; i < str.length; i++) {
+				var c = str.charCodeAt(i);
+				// Shift_JIS: 0x0 ～ 0x80, 0xa0 , 0xa1 ～ 0xdf , 0xfd ～ 0xff
+				// Unicode : 0x0 ～ 0x80, 0xf8f0, 0xff61 ～ 0xff9f, 0xf8f1 ～ 0xf8f3
+				if ( (c >= 0x0 && c < 0x81) || (c == 0xf8f0) || (c >= 0xff61 && c < 0xffa0) || (c >= 0xf8f1 && c < 0xf8f4)) {
+					r += 0.5;
+				} else {
+					r += 1;
+				}
+			}
+
+			var countr = Math.floor(max_length - r);
+			$("#rest_text").text(countr);
+			if(r > max_length){
+				$("#rest_text").css("color","red");
+			}else{
+				$("#rest_text").css("color","black");
+			}
+		},100);
+	});
+};
+
+</script>
+
+    </body>
+</html>
